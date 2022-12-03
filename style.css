@@ -4,14 +4,18 @@ header{
     text-align: center;
 }
 
-.city-name .button{
-    display: block;
+.city-name button{
+    display: flex;
+    width: 90%;
+    height: auto;
+    margin: 10px;
 }
 
 .weather{
-    background-color: beige;
+   
     display: flex;
-    display: 100%;
+    
+
 }
 
 .container{
@@ -19,10 +23,12 @@ header{
     background-color: aqua;
     padding: 10px;
     border: 1px solid black;
+    justify-self: start;
 }
 
 .weather-forecast{ 
     padding-top: 0px;
+    border: 0px;
     position: fixed;
     bottom: 0;
     display: flex;
@@ -32,6 +38,18 @@ header{
     justify-content: flex-start;
 }
 
+p{
+    font: 30px;
+    font-weight: bold;
+    border: 0px;
+    background-color: palevioletred;
+}
+
+.weather-forecast{
+    border: 10 px;
+    margin-top: 0%;
+    background-color: lightcoral;
+}
 
 .weather-forecast .weather-forecast-item{
     display: flex;
