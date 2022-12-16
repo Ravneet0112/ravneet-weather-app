@@ -18,32 +18,23 @@
     <h1>Weather Dashboard</h1>
   </header>
   <div class="weather">
-    <div class="col-lg-3 city">
+    <div class="col-lg-2 city">
       <h2>Search for city:</h2>
-      <textarea></textarea>
+      <input type="text" id="value" placeholder="City name here">
       <br>
-      <button class="btn">Search</button>
+      <button class="btn" onclick="searchByCity()">Search</button>
 
       <hr>
-      <div class="city_name">
-      <button class="Atlanta">Atlanta</button>
-      <button class="Denver">Denver</button>
-      <button class="Seatle">Seatle</button>
-      <button class="San-Francisco">San Francisco</button>
-      <button class="Orlando">Orlando</button>
-      <button class="New-York">New York</button>
-      <button class="Chicago">Chicago</button>
-      <button class="Austin">Austin</button>
-      </div>
+      <div class="city_name">      </div>
     </div>
-    <div class="col-lg-9">
+    <div class="col-lg-10">
       <div class="container currentTemp">
         <div class="weather-item">
           <div>
           <span class ="cityname"> Atlanta </span>
-          <span class="date">25/11/22</span></div>
-          
-          <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+          <span class="dateformat">25/11/22</span>          
+          <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon icon">
+          </div>
           <h4 class="temp">Temp: 76 F</h4>
           <h4 class="wind">Wind: 8.43 MPH</h4>
           <h4 class="humidity">Humidity: 44%</h4>

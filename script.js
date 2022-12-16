@@ -6,106 +6,215 @@ const humidityEL = document.querySelector(".humidity");
 const windEl = document.querySelector(".wind");
 const temperatureEl = document.querySelector(".temp");
 const cityEl = document.querySelector(".cityname");
-
+const dateformatEl = document.querySelector(".dateformat")
+const iconEl = document.querySelector(".icon")
+const valueEL = document.querySelector("#value");
 
 const API_Key = 'b6bcdc4a998ff756004ea7d2db89078c';
+var city = []
+
+window.addEventListener("load",()=>{
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition((position)=>{
+            let lon= position.coords.longitude;
+            let lat= position.coords.latitude;
+            const url= `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&` + `lon=${lon}&appid=${apikey}`;
+
+            fetch(url).then((res)=>{
+                return res.json();
+            }).then((data)=>{
+                console.log(data);
+                console.log(new Date().getTime())
+                var dat= new Date(data.dt)
+                console.log(dat.toLocaleString(undefined,'Asia/Kolkata'))
+                console.log(new Date().getMinutes())
+                weatherReport(data);
+            })
+        })
+    }
+})
+
+
+if (localStorage.getItem("city")) {
+    city = JSON.parse(localStorage.getItem("city"));
+}
+
+
+
 setInterval(() => {
     const time = new Date();
-    const month = time.getMonth();
+    const year = time.getFullYear();
+    const month = time.getUTCMonth();
     const date = time.getDate();
 
     const day = time.getDay();
-},1000);
+});
 
-getWeatherData()
-function getWeatherData(){
-    navigator.geolocation.getCurrentPosition((success) =>{ 
-        let lon=success.coords.longitude;
-        let lat = success.coords.latitude;   
+function searchByCity() {
+    var place = document.getElementById('value').value;
+    var urlsearch = `http://api.openweathermap.org/data/2.5/weather?q=${place}&` + `appid=${API_Key}`;
+
+   // var futureurl = `https.//api.openweathermap.org/data/2.5/forecast?q=${place}& + appid=${API_Key}`
+    if (city.includes(place)===false){
+    city.push(place);
+    localStorage.setItem("city", JSON.stringify(city));
+    }
+    fetch(urlsearch).then((res) => {
+        return res.json();
+    }).then((data) => {
+        console.log(data);
+        getWeatherData(data)
+    })
+    city_nameEl.innerHTML = "";
+
+    function getWeatherData() {
+        cityEl.innerHTML = place;
+        //city_nameEl.append(button)
+
+        dateformatEl.innerHTML = new Date().toLocaleDateString();
+
+        temperatureEl.innerText = 'Temp: ' + Math.floor(data.main.temp - 273) + ' °C';
+
+        windEl.innerHTML = 'Wind: ' + Math.floor(data.wind.speed * 60) + ' MPH';
+
+        humidityEL.innerHTML = 'Humidity: ' + data.main.humidity + ' %';
+
+
+    }
+    }
+
+    /*fetch(futureurl).then(res => {
+    return res.json()
+    }).then((data) => {
+    console.log(data);
+    
+    document.getElementById('value').value = '';}*/
+
+  
+
+    
+
+    
+
+
+
+function displayCityhistory(){
+    city_nameEl.innerHTML = ""
+    console.log(city);
+    for(i = 0; i< city.length; i++){
+        var button = document.createElement('button')
+        button.classList = city[i]+" button";
+        button.textContent = city[i]
+    }
+   city_nameEl.append(button)
+   searchByCity()
+}
+displayCityhistory()
+//getWeatherData()
+/*
+window.addEventListener("load", getWeatherData)
+
+function getWeatherData() {
+
+    navigator.geolocation.getCurrentPosition((success) => {
+        let lon = success.coords.longitude;
+        let lat = success.coords.latitude;
         console.log(lon, lat)
         /*
         const url = `https://api.openweather.org/data/2.5/weather?q=toronto&appid=b6bcdc4a998ff756004ea7d2db89078c`*/
 
-        const url = `https://api.openweathermap.org/data/2.5/forecast/?q=Brampton,ON,CA&excude=hourly&appid=${API_Key}`
         
-        fetch(url).then(res => {
-            return res.json()}).then((data) => {
-        console.log(data)
-        return data
-        });
-        showWeatherData();
-        futureTemp();
-        })
-    }
+        //showWeatherData(valueEL.value);
+        //futureTemp(valueEL.value);
+    
 
-    function showWeatherData(data) {
+/*
 
-        var urlcast = `https://api.openweathermap.org/data/2.5/forecast/?q=brampton&excude=hourly&appid=${API_Key}`;
+function showWeatherData(cityname) {
+    // var place = document.getElementById('input').value;
+    var urlcast = `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&excude=hourly&appid=${API_Key}`;
 
-        fetch(urlcast).then(res=>{
-            return res.json()
-        }).then((forecast)=>{
-            console.log(forecast);
-            //currentTemp(forecast);
 
-            cityEl.innerHTML = forecast.city.name;
+    fetch(urlcast).then(res => {
+        return res.json()
+    }).then((data) => {
+        console.log(data);
+        //currentTemp(forecast);
 
-            dateEl.innerHTML = forecast.list[0].dt_txt;
+        cityEl.innerHTML = data.city.name;
 
-            temperatureEl.innerText = 'Temp: ' + Math.floor(forecast.list[0].main.temp - 273) + ' C';
+        dateformatEl.innerHTML = new Date(data.list[0].dt_txt).toLocaleDateString();
 
-            windEl.innerHTML = 'Wind: ' + Math.floor(forecast.list[0].wind.speed * 60) + ' MPH';
+        let iconEl = data.list[0].weather[0].icon;
+        let iconurl = "https://api.openweathermap.org/img/w/" + iconEl + ".png";
+        iconEl.scr = iconurl;
 
-            humidityEL.innerHTML = 'Humidity: ' + forecast.list[0].main.humidity + ' %';
+        temperatureEl.innerText = 'Temp: ' + Math.floor(data.list[0].main.temp - 273) + ' °C';
 
-            
-        })
-    }
+        windEl.innerHTML = 'Wind: ' + Math.floor(data.list[0].wind.speed * 60) + ' MPH';
 
-    function futureTemp(data) {
-        var urlcast = `https://api.openweathermap.org/data/2.5/forecast/?q=brampton&excude=hourly&appid=${API_Key}`;
+        humidityEL.innerHTML = 'Humidity: ' + data.list[0].main.humidity + ' %';
 
-        fetch(urlcast).then(res=>{
-            return res.json()
-        }).then((forecast)=>{
-            console.log(forecast);
 
-            document.querySelector('.weather-forecast').innerHTML=''
-            for (let i = 8; i < forecast.list.length; i+=8) {
-                console.log(forecast.list[i]);
-                let div= document.createElement('div');
-                div.setAttribute('class','weather-forecast-item');
-                
-                let day= document.createElement('p');
-                day.setAttribute('class','date')
-                day.innerText= new Date(forecast.list[i].dt*1000);
-                div.appendChild(day);
+    })
+}
 
-                /*let description= document.createElement('p');
-                description.setAttribute('class','desc')
-                description.innerText= forecast.list[i].weather[0].description;
-                div.appendChild(description);*/
-        
-                let temp= document.createElement('p');
-                temp.innerText= Math.floor((forecast.list[i].main.temp - 273))+ ' °C';
-                div.appendChild(temp)
-        
+function futureTemp(cityname) {
 
-                let wind= document.createElement('p');
-                wind.setAttribute('class','wind')
-                wind.innerText= 'Wind: ' + Math.floor(forecast.list[i].wind.speed * 60) + ' MPH';
-                div.appendChild(wind);
+    var urlcast = `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&excude=hourly&appid=${API_Key}`;
 
-                let humidity= document.createElement('p');
-                humidity.setAttribute('class','humidity')
-                humidity.innerText= 'Humidity: ' + forecast.list[i].main.humidity + ' %';
-                div.appendChild(humidity);
+    fetch(urlcast).then(res => {
+        return res.json()
+    }).then((data) => {
+        console.log(data);
 
-                
-        
-                document.querySelector('.weather-forecast').appendChild(div)
-            }
-        })
-    }
+        document.querySelector('.weather-forecast').innerHTML = ''
+        for (let i = 7; i < data.list.length; i += 8) {
+            console.log(data.list[i]);
+            let div = document.createElement('div');
+            div.setAttribute('class', 'weather-forecast-item');
 
-    //.toDateString(undefined,'Asia/Kolkata')
+            let day = document.createElement('h4');
+            day.setAttribute('class', 'date')
+            day.innerText = new Date(data.list[i].dt_txt).toLocaleDateString();
+            div.appendChild(day);
+
+            /*let description= document.createElement('p');
+            description.setAttribute('class','desc')
+            description.innerText= forecast.list[i].weather[0].description;
+            div.appendChild(description);
+
+            let temp = document.createElement('h4');
+            temp.innerText = 'Temp: ' + Math.floor((data.list[i].main.temp - 273)) + ' °C';
+            div.appendChild(temp)
+
+            // let icon = document.createElement('img');
+            //icon.innerText = <img src="http://openweathermap.org/img/wn/${forecast.list[i]weather[0].icon}@2x.png" alt="weather icon" class="w-icon"></img>
+            // div.appendChild(img)
+
+            //  var icon = forecast.list[i].weather[0].icon;
+            var icon = document.createElement('img');
+            let iconurl = "https://api.openweathermap.org/img/w/" + forecast.list[i].weather[0].icon + ".png";
+            iconEl.scr = iconurl;
+
+
+
+
+            let wind = document.createElement('h4');
+            wind.setAttribute('class', 'wind')
+            wind.innerText = 'Wind: ' + Math.floor(data.list[i].wind.speed * 60) + ' MPH';
+            div.appendChild(wind);
+
+            let humidity = document.createElement('h4');
+            humidity.setAttribute('class', 'humidity')
+            humidity.innerText = 'Humidity: ' + data.list[i].main.humidity + ' %';
+            div.appendChild(humidity);
+
+
+
+            document.querySelector('.weather-forecast').appendChild(div)
+        }
+    })
+}*/
+
+
