@@ -20,7 +20,7 @@ window.addEventListener("load",()=>{
             let lon= position.coords.longitude;
             let lat= position.coords.latitude;
             const url= `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&` + `lon=${lon}&appid=${API_Key}`;
-
+      //      const cast = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&` + `lon=${lon}&appid=${API_Key}`;
             fetch(url).then((res)=>{
                 return res.json();
             }).then((data)=>{
@@ -52,7 +52,7 @@ setInterval(() => {
 });
 
 function searchByCity() {
-    var place = (document.getElementById('value').value.toUpperCase());
+   var place = (document.getElementById('value').value.toUpperCase());
     var urlsearch = `http://api.openweathermap.org/data/2.5/weather?q=${place}&` + `appid=${API_Key}`;
 
     var cast = `https://api.openweathermap.org/data/2.5/forecast?q=${place}&excude=hourly&appid=${API_Key}`;
@@ -90,16 +90,11 @@ function searchByCity() {
 
 function displayCityhistory(){
     city_nameEl.innerHTML = ""
-    //localStorage.setItem("city", JSON.stringify(city));
-   /* if (localStorage.getItem("city")) {
-        city = JSON.parse((localStorage.getItem("city").toLocaleUpperCase()));
-        console.log(city);
-    }*/
-    
+       
     city = JSON.parse((localStorage.getItem("city").toLocaleUpperCase()))
     console.log(city);
     var result = city.filter(function(cityn){
-        return cityn !== undefined;
+        return cityn !== "";
     })
     console.log(result)
 
@@ -110,12 +105,12 @@ function displayCityhistory(){
         button.textContent = result[i]
         console.log(button)
         city_nameEl.append(button)
-        
+        city_nameEl.addEventListener("click", searchByCity(city_nameEl))
     }
  // city_nameEl.append(button)
-   searchByCity()
+    searchByCity()
+    }
 
-}
 displayCityhistory()
 
 
@@ -179,111 +174,5 @@ function futureTemp(data) {
 }
 
 futureTemp();
-//getWeatherData()
-/*
-window.addEventListener("load", getWeatherData)
-
-function getWeatherData() {
-
-    navigator.geolocation.getCurrentPosition((success) => {
-        let lon = success.coords.longitude;
-        let lat = success.coords.latitude;
-        console.log(lon, lat)
-        /*
-        const url = `https://api.openweather.org/data/2.5/weather?q=toronto&appid=b6bcdc4a998ff756004ea7d2db89078c`*/
-
-        
-        //showWeatherData(valueEL.value);
-        //futureTemp(valueEL.value);
-    
-
-/*
-
-function showWeatherData(cityname) {
-    // var place = document.getElementById('input').value;
-    var urlcast = `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&excude=hourly&appid=${API_Key}`;
-
-
-    fetch(urlcast).then(res => {
-        return res.json()
-    }).then((data) => {
-        console.log(data);
-        //currentTemp(forecast);
-
-        cityEl.innerHTML = data.city.name;
-
-        dateformatEl.innerHTML = new Date(data.list[0].dt_txt).toLocaleDateString();
-
-        let iconEl = data.list[0].weather[0].icon;
-        let iconurl = "https://api.openweathermap.org/img/w/" + iconEl + ".png";
-        iconEl.scr = iconurl;
-
-        temperatureEl.innerText = 'Temp: ' + Math.floor(data.list[0].main.temp - 273) + ' °C';
-
-        windEl.innerHTML = 'Wind: ' + Math.floor(data.list[0].wind.speed * 60) + ' MPH';
-
-        humidityEL.innerHTML = 'Humidity: ' + data.list[0].main.humidity + ' %';
-
-
-    })
-}
-
-function futureTemp(cityname) {
-
-    var urlcast = `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&excude=hourly&appid=${API_Key}`;
-
-    fetch(urlcast).then(res => {
-        return res.json()
-    }).then((data) => {
-        console.log(data);
-
-        document.querySelector('.weather-forecast').innerHTML = ''
-        for (let i = 7; i < data.list.length; i += 8) {
-            console.log(data.list[i]);
-            let div = document.createElement('div');
-            div.setAttribute('class', 'weather-forecast-item');
-
-            let day = document.createElement('h4');
-            day.setAttribute('class', 'date')
-            day.innerText = new Date(data.list[i].dt_txt).toLocaleDateString();
-            div.appendChild(day);
-
-            /*let description= document.createElement('p');
-            description.setAttribute('class','desc')
-            description.innerText= forecast.list[i].weather[0].description;
-            div.appendChild(description);
-
-            let temp = document.createElement('h4');
-            temp.innerText = 'Temp: ' + Math.floor((data.list[i].main.temp - 273)) + ' °C';
-            div.appendChild(temp)
-
-            // let icon = document.createElement('img');
-            //icon.innerText = <img src="http://openweathermap.org/img/wn/${forecast.list[i]weather[0].icon}@2x.png" alt="weather icon" class="w-icon"></img>
-            // div.appendChild(img)
-
-            //  var icon = forecast.list[i].weather[0].icon;
-            var icon = document.createElement('img');
-            let iconurl = "https://api.openweathermap.org/img/w/" + forecast.list[i].weather[0].icon + ".png";
-            iconEl.scr = iconurl;
-
-
-
-
-            let wind = document.createElement('h4');
-            wind.setAttribute('class', 'wind')
-            wind.innerText = 'Wind: ' + Math.floor(data.list[i].wind.speed * 60) + ' MPH';
-            div.appendChild(wind);
-
-            let humidity = document.createElement('h4');
-            humidity.setAttribute('class', 'humidity')
-            humidity.innerText = 'Humidity: ' + data.list[i].main.humidity + ' %';
-            div.appendChild(humidity);
-
-
-
-            document.querySelector('.weather-forecast').appendChild(div)
-        }
-    })
-}*/
 
 
