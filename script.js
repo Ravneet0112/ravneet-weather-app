@@ -69,7 +69,7 @@ function searchByCity() {
         getWeatherData(data)
         futureTemp(data)
     })
-    city_nameEl.innerHTML = "";
+   //city_nameEl.innerHTML = "";
 }
     
     function getWeatherData(data) {
@@ -98,13 +98,21 @@ function displayCityhistory(){
     
     city = JSON.parse((localStorage.getItem("city").toLocaleUpperCase()))
     console.log(city);
-    for(i = 0; i< city.length; i++){
+    var result = city.filter(function(cityn){
+        return cityn !== undefined;
+    })
+    console.log(result)
+
+    
+    for(i = 0; i< result.length; i++){
         var button = document.createElement('button')
-        button.classList = city[i]+" button";
-        button.textContent = city[i]
+        button.classList = result[i]+" button";
+        button.textContent = result[i]
         console.log(button)
+        city_nameEl.append(button)
+        
     }
-   city_nameEl.append(button)
+ // city_nameEl.append(button)
    searchByCity()
 
 }
