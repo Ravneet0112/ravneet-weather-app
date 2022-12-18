@@ -9,3 +9,5 @@ Please refer to the following link for the URL and GitHub Repo
 https://github.com/Ravneet0112/ravneet-weather-app
 
 and live page at: 
+
+https://ravneet0112.github.io/ravneet-weather-app/
